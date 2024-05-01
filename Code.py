@@ -52,7 +52,7 @@ st.title("Generative AI Chat")
 # Password input
 password = st.text_input("Enter Password:", type="password")
 
-if password == "1234":
+if password == "123456":
     st.success("Password correct. You may proceed.")
     # User input after correct password
     language = st.selectbox("Select Language", ["Java", "Python", "C"])
