@@ -18,7 +18,17 @@ genai.configure(
 # Initialize Generative Model
 model = genai.GenerativeModel('gemini-pro')
 chat = model.start_chat(history=[])
-instruction = "In this chat explain the given code or the line of code in detail, explain it as a five year old "
+instruction = """Your an experienced senior developer, you have been tasked with explaining code to junior developers, explain the provided code like they are 5 years old, ensure to give a structured output like given below:
+1.Functions and Method calls 
+2.Flow of execution of the code 
+3.Special libraries or variables 
+4.Use cases 
+5.Time Complexity of the code 
+5.Space Complexity of the code
+6.Potential failure points
+7.Rate the code in terms of readability and efficiency
+Structure the following in the tabular format by creating the appropriate columns and make sure to include all the 8 points
+If the code consists of looping or iterative statement give a trace table in tabular format"""
 
 
 # Function to check syntax based on language
@@ -70,6 +80,7 @@ def check_syntax(code, language):
 
 # Function to explain code in tabular format
 def explain_tabular(code):
+
     # Define regular expressions for different components of code
     method_call_regex = r'\b[a-zA-Z_]\w*\([^()]*\)'
     variable_regex = r'\b[a-zA-Z_]\w*\b'
@@ -150,13 +161,13 @@ if password == "123456":
         if prompt.strip() != '':
             if check_syntax(prompt, language):
                 try:
-                    # Send user's prompt to the model
-                    response = chat.send_message(prompt)
-
-                    # Display response based on selected answer type
                     if answer_type == "Elaborated Answer":
+                        # Send user's prompt
+                        response = chat.send_message(prompt + "\n\n" + instruction)
+                        # Display response
                         st.write("Bot:", response.text)
                     else:
+                        # Explain and plot code
                         explain_and_plot(prompt)
                 except genai.generation_types.StopCandidateException:
                     st.write("Sorry, I didn't understand that. Can you try asking in a different way?")
